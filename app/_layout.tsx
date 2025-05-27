@@ -1,29 +1,35 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { Ionicons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import { EntriesProvider } from '../data/EntriesContext';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
-
+export default function Layout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <EntriesProvider>
+      <Tabs
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ color, size }) => {
+            let iconName: keyof typeof Ionicons.glyphMap = 'ellipse';
+            if (route.name === 'index') {
+              iconName = 'home-outline';
+            } else if (route.name === 'entry/new') {
+              iconName = 'add-circle-outline';
+            } else if (route.name === 'photo-editor') {
+              iconName = 'images-outline';
+            } else if (route.name === 'help') {
+              iconName = 'help-circle-outline';
+            }
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: '#fff',
+          tabBarInactiveTintColor: '#aaa',
+          tabBarStyle: { backgroundColor: '#2d1457' },
+        })}
+      >
+        <Tabs.Screen name="index" options={{ title: 'Home' }} />
+        <Tabs.Screen name="entry/new" options={{ title: 'New Entry' }} />
+        <Tabs.Screen name="photo-editor" options={{ title: 'Photo Editor' }} />
+        <Tabs.Screen name="help" options={{ title: 'Help' }} />
+      </Tabs>
+    </EntriesProvider>
   );
 }
