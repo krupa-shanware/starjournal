@@ -13,8 +13,6 @@ export default function Layout() {
               iconName = 'home-outline';
             } else if (route.name === 'entry/new') {
               iconName = 'add-circle-outline';
-            } else if (route.name === 'photo-editor') {
-              iconName = 'images-outline';
             } else if (route.name === 'help') {
               iconName = 'help-circle-outline';
             }
@@ -27,7 +25,6 @@ export default function Layout() {
       >
         <Tabs.Screen name="index" options={{ title: 'Home' }} />
         <Tabs.Screen name="entry/new" options={{ title: 'New Entry' }} />
-        <Tabs.Screen name="photo-editor" options={{ title: 'Photo Editor' }} />
         <Tabs.Screen name="help" options={{ title: 'Help' }} />
       </Tabs>
     </EntriesProvider>

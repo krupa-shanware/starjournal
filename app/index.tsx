@@ -1,7 +1,8 @@
 // app/index.tsx
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Image, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useEntries } from '../data/EntriesContext';
 import { Entry } from '../data/entries';
 
@@ -33,40 +34,59 @@ export default function HomeScreen() {
   const { entries } = useEntries();
   const sections = groupEntriesByMonth(entries);
 
+  // Calculate unique planetary objects (case-insensitive)
+  const uniqueObjects = new Set(
+    entries.flatMap(e => e.objects.map(obj => obj.trim().toLowerCase()))
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View>
-          <Text style={styles.title}>StarJournal</Text>
-          <Text style={styles.entryCount}>{entries.length} entries</Text>
-        </View>
-        <TouchableOpacity
-          style={styles.newEntryButton}
-          onPress={() => router.push('/entry/new')}
-        >
-          <Text style={styles.newEntryText}>+ New Entry</Text>
-        </TouchableOpacity>
-      </View>
-      <SectionList
-        sections={sections}
-        keyExtractor={item => item.id}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.sectionHeader}>{title}</Text>
-        )}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card} onPress={() => router.push(`/entry/${item.id}`)}>
-            <Text style={styles.cardDate}>{item.date}</Text>
-            <Text style={styles.cardTitle}>{item.title}</Text>
-            <Text style={styles.cardInfo}>{item.location}</Text>
-            <View style={styles.imageRow}>
-              {item.images && item.images.length > 0 && item.images.map((img: string, idx: number) => (
-                <Image key={idx} source={{ uri: img }} style={styles.cardImage} />
-              ))}
+        <View style={{ flex: 1 }}>
+          <View style={styles.titleRow}>
+            <Text style={styles.title}>Star Journal</Text>
+            <TouchableOpacity
+              style={styles.newEntryButton}
+              onPress={() => router.push('/entry/new')}
+            >
+              <Text style={styles.newEntryText}>+ New Entry</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.metricsRow}>
+            <View style={styles.metricBox}>
+              <Ionicons name="document-text-outline" size={18} color="#fff" style={styles.metricIcon} />
+              <Text style={styles.metricText}>{entries.length} entries</Text>
             </View>
-          </TouchableOpacity>
-        )}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      />
+            <Text style={styles.metricDivider}>|</Text>
+            <View style={styles.metricBox}>
+              <Ionicons name="planet-outline" size={18} color="#fff" style={styles.metricIcon} />
+              <Text style={styles.metricText}>{uniqueObjects.size} planetary objects</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+      {entries.length === 0 ? (
+        <View style={styles.emptyStateContainer}>
+          <Ionicons name="telescope-outline" size={64} color="#fff" style={{ marginBottom: 16 }} />
+          <Text style={styles.emptyStateText}>No entries yet. Tap + New Entry to start your journal!</Text>
+        </View>
+      ) : (
+        <SectionList
+          sections={sections}
+          keyExtractor={item => item.id}
+          renderSectionHeader={({ section: { title } }) => (
+            <Text style={styles.sectionHeader}>{title}</Text>
+          )}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.card} onPress={() => router.push(`/entry/${item.id}`)}>
+              <Text style={styles.cardDate}>{item.date}</Text>
+              <Text style={styles.cardTitle}>{item.title}</Text>
+              <Text style={styles.cardInfo}>{item.location}</Text>
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={{ paddingBottom: 20 }}
+        />
+      )}
     </View>
   );
 }
@@ -90,11 +110,35 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
   },
-  entryCount: {
-    color: '#fff',
-    fontSize: 16,
-    marginTop: 4,
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 2,
+  },
+  metricsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 6,
     marginBottom: 0,
+  },
+  metricBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  metricIcon: {
+    marginRight: 4,
+  },
+  metricText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  metricDivider: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginHorizontal: 8,
   },
   newEntryButton: {
     backgroundColor: '#3a2459',
@@ -147,5 +191,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 8,
     backgroundColor: '#222',
+  },
+  emptyStateContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyStateText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+    marginTop: 8,
+    opacity: 0.8,
   },
 });

@@ -1,10 +1,9 @@
 // app/entry/new.tsx
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useEntries } from '../../data/EntriesContext';
 
 const VISIBILITY_OPTIONS = ['Clear', 'Partly Cloudy', 'Cloudy', 'Hazy', 'Other'];
@@ -25,19 +24,6 @@ export default function NewEntryScreen() {
   const [triedSubmit, setTriedSubmit] = useState(false);
   const { addEntry } = useEntries();
   const router = useRouter();
-
-  // Placeholder for photo picker
-  const addPhoto = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      quality: 1,
-    });
-    if (!result.canceled) {
-      // result.assets is an array of selected images
-      setImages([...images, ...result.assets.map(asset => asset.uri)]);
-    }
-  };
 
   const addObject = () => {
     if (objectInput.trim() && !objects.includes(objectInput.trim())) {
@@ -190,18 +176,6 @@ export default function NewEntryScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Photos */}
-      <Text style={styles.label}>Photos</Text>
-      <View style={styles.imageRow}>
-        {images.map((img, idx) => (
-          <Image key={idx} source={{ uri: img }} style={styles.cardImage} />
-        ))}
-        <TouchableOpacity onPress={addPhoto} style={styles.addPhotoButton}>
-          <Ionicons name="add" size={24} color="#fff" />
-          <Text style={{ color: '#fff', marginLeft: 4 }}>Add Photo</Text>
-        </TouchableOpacity>
-      </View>
-
       {/* Description */}
       <Text style={styles.label}>Description</Text>
       <TextInput
@@ -234,9 +208,6 @@ const styles = StyleSheet.create({
   objectTag: { backgroundColor: '#fff2', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, marginRight: 8, marginBottom: 4 },
   objectText: { color: '#fff', fontSize: 14 },
   addObjectButton: { backgroundColor: '#3a2459', borderRadius: 8, paddingVertical: 8, paddingHorizontal: 12 },
-  imageRow: { flexDirection: 'row', alignItems: 'center', marginTop: 4, marginBottom: 8, flexWrap: 'wrap' },
-  cardImage: { width: 48, height: 48, borderRadius: 8, marginRight: 8, backgroundColor: '#222' },
-  addPhotoButton: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#3a2459', borderRadius: 8, paddingVertical: 8, paddingHorizontal: 12 },
   textArea: { backgroundColor: '#3a2459', color: '#fff', borderRadius: 8, padding: 10, fontSize: 16, minHeight: 100, textAlignVertical: 'top', marginTop: 4 },
   backButton: {
     flexDirection: 'row',

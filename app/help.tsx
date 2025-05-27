@@ -18,26 +18,11 @@ export default function HelpScreen() {
         <View style={styles.row}>
           <View style={styles.iconTextBox}>
             <Ionicons name="document-text-outline" size={32} color="#fff" style={styles.icon} />
-            <Text style={styles.featureText}>Write notes and include photos of your observations. Include weather conditions, planetary objects, and more.</Text>
+            <Text style={styles.featureText}>Write notes and include photos of your observations. Include weather conditions, location, planetary objects, and more.</Text>
           </View>
           <View style={styles.iconTextBox}>
             <Ionicons name="image-outline" size={32} color="#fff" style={styles.icon} />
-            <Text style={styles.featureText}>Freely edit entries and view by date. We'll keep track of your acheivements, such as # entries.</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* Photo Editor Section */}
-      <View style={styles.featureBox}>
-        <Text style={styles.featureHeader}>Photo Editor</Text>
-        <View style={styles.row}>
-          <View style={styles.iconTextBox}>
-            <Ionicons name="document-text-outline" size={32} color="#fff" style={styles.icon} />
-            <Text style={styles.featureText}>Upload photos of the night sky for automatic enhancement.</Text>
-          </View>
-          <View style={styles.iconTextBox}>
-            <Ionicons name="image-outline" size={32} color="#fff" style={styles.icon} />
-            <Text style={styles.featureText}>Easily adjust settings to make stars and other planetary objects more visible..</Text>
+            <Text style={styles.featureText}>Freely edit entries and view by date. We'll keep track of your acheivements, such as # entries created and # planetary objects observed.</Text>
           </View>
         </View>
       </View>
